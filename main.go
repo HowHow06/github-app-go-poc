@@ -9,8 +9,8 @@ import (
 
 	"github.com/joho/godotenv"
 	abs "github.com/microsoft/kiota-abstractions-go"
+	kiotaSerialization "github.com/microsoft/kiota-abstractions-go/serialization"
 	"github.com/octokit/go-sdk/pkg"
-	"github.com/octokit/go-sdk/pkg/github/installation"
 )
 
 func main() {
@@ -32,26 +32,20 @@ func main() {
 		pkg.WithGitHubAppAuthentication(os.Getenv("PATH_TO_PEM_FILE"), os.Getenv("CLIENT_ID"), installationID),
 	)
 
-	// equally valid:
-	//client, err := pkg.NewApiClient()
 	if err != nil {
 		log.Fatalf("error creating client: %v", err)
 	}
 
-	queryParams := &installation.RepositoriesRequestBuilderGetQueryParameters{}
-	requestConfig := &abs.RequestConfiguration[installation.RepositoriesRequestBuilderGetQueryParameters]{
-		QueryParameters: queryParams,
-	}
-	repos, err := client.Installation().Repositories().Get(context.Background(), requestConfig)
+	ownerId := os.Getenv("OWNER_NAME")
+	repoId := os.Getenv("REPO_NAME")
+	branchName := os.Getenv("BRANCH_NAME")
+	newRequestConfig := &abs.RequestConfiguration[abs.DefaultQueryParameters]{}
+	response, err := client.Repos().ByOwnerId(ownerId).ByRepoId(repoId).Branches().ByBranch(branchName).Protection().Get(context.Background(), newRequestConfig)
+
 	if err != nil {
-		log.Fatalf("error getting repositories: %v", err)
+		log.Fatalf("error getting branch protection rules: %v", err)
 	}
+	result, _ := kiotaSerialization.SerializeToJson(response)
 
-	if len(repos.GetRepositories()) > 0 {
-		log.Printf("Repositories:\n")
-		for _, repo := range repos.GetRepositories() {
-			log.Printf("%v\n", *repo.GetFullName())
-		}
-	}
-
+	log.Println(string(result))
 }
