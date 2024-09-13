@@ -38,6 +38,8 @@ func main() {
 	ownerId := os.Getenv("OWNER_NAME")
 	repoId := os.Getenv("REPO_NAME")
 	branchName := os.Getenv("BRANCH_NAME")
+	// Since Octokit Go SDK is generated using Kiota, refer to https://learn.microsoft.com/en-us/openapi/kiota/quickstarts/go
+	// GET /repos/{owner}/{repo}/branches/{branch}/protection
 	response, err := client.Repos().ByOwnerId(ownerId).ByRepoId(repoId).Branches().ByBranch(branchName).Protection().Get(context.Background(), nil)
 
 	if err != nil {
