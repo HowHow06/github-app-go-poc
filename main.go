@@ -8,7 +8,6 @@ import (
 	"time"
 
 	"github.com/joho/godotenv"
-	abs "github.com/microsoft/kiota-abstractions-go"
 	kiotaSerialization "github.com/microsoft/kiota-abstractions-go/serialization"
 	"github.com/octokit/go-sdk/pkg"
 )
@@ -39,8 +38,7 @@ func main() {
 	ownerId := os.Getenv("OWNER_NAME")
 	repoId := os.Getenv("REPO_NAME")
 	branchName := os.Getenv("BRANCH_NAME")
-	newRequestConfig := &abs.RequestConfiguration[abs.DefaultQueryParameters]{}
-	response, err := client.Repos().ByOwnerId(ownerId).ByRepoId(repoId).Branches().ByBranch(branchName).Protection().Get(context.Background(), newRequestConfig)
+	response, err := client.Repos().ByOwnerId(ownerId).ByRepoId(repoId).Branches().ByBranch(branchName).Protection().Get(context.Background(), nil)
 
 	if err != nil {
 		log.Fatalf("error getting branch protection rules: %v", err)
