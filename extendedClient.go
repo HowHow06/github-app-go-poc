@@ -79,12 +79,8 @@ func NewApiClient(optionFuncs ...ClientOptionFunc) (*pkg.Client, error) {
 		}
 
 		// This part is the extended implementation that accepts the private key value
-		if extendedOptions.GitHubAppPemValue != "" {
-			if extendedOptions.GitHubAppClientID != "" {
-				appTransport, err = ghinstallation.NewTransport(existingTransport, extendedOptions.GitHubAppClientID, extendedOptions.GitHubAppInstallationID, []byte(extendedOptions.GitHubAppPemValue))
-			} else {
-				appTransport, err = ghinstallation.NewTransportFromAppID(existingTransport, extendedOptions.GitHubAppID, extendedOptions.GitHubAppInstallationID, []byte(extendedOptions.GitHubAppPemValue))
-			}
+		if extendedOptions.GitHubAppPemValue != "" && extendedOptions.GitHubAppClientID != "" {
+			appTransport, err = ghinstallation.NewTransport(existingTransport, extendedOptions.GitHubAppClientID, extendedOptions.GitHubAppInstallationID, []byte(extendedOptions.GitHubAppPemValue))
 		}
 
 		if err != nil {
