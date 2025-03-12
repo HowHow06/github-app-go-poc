@@ -5,3 +5,5 @@ A proof of concept repository to use Github App authentication in Github API Cli
 Something
 
 Change from branch 1. :D
+
+Changes from branch 2.
